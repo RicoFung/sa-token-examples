@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+
+<mapper namespace="com.domain.menu.dao.AppMenuDao">
+	<!-- 开启基于redis的二级缓存 -->
+	<!-- 
+    <cache type="chok.redis.mybatis.RedisCache">
+    	<property name="eviction" value="LRU" />
+        <property name="flushInterval" value="6000000" />
+        <property name="size" value="1024" />
+        <property name="readOnly" value="false" />
+    </cache>
+     -->
+
+	<!-- 
+	****************************************************************************************************
+	* WRITE
+	****************************************************************************************************
+	-->
+	
+    <!-- 自动生成id策略 -->
+    <insert id="create" parameterType="com.domain.menu.model.param.AppMenuCreateParam"> 
+       	<selectKey keyProperty="id" resultType="string" order="BEFORE">
+	         SELECT SEQ_APP_MENU.NEXTVAL FROM DUAL
+		</selectKey>
+       	INSERT INTO APP_MENU 
+       	( ID, PATH, NAME, REDIRECT, COMPONENT, METATITLE, METAICON, METAEXTRAICON, METASHOWLINK, METASHOWPARENT, METAROLES, METAAUTHS, METAKEEPALIVE, METAFRAMESRC, METAFRAMELOADING, TRANSITIONNAME, TRANSITIONENTER, TRANSITIONLEAVE, HIDDENTAG, DYNAMICLEVEL, ACTIVEPATH, PID) 
+       	VALUES
+       	( #{id}, #{path}, #{name}, #{redirect}, #{component}, #{metatitle}, #{metaicon}, #{metaextraicon}, #{metashowlink}, #{metashowparent}, #{metaroles}, #{metaauths}, #{metakeepalive}, #{metaframesrc}, #{metaframeloading}, #{transitionname}, #{transitionenter}, #{transitionleave}, #{hiddentag}, #{dynamiclevel}, #{activepath}, #{pid})
+    </insert>  
+    
+    <insert id="createBatch">
+    	INSERT INTO APP_MENU
+    	(
+        ID,
+        PATH,
+        NAME,
+        REDIRECT,
+        COMPONENT,
+        METATITLE,
+        METAICON,
+        METAEXTRAICON,
+        METASHOWLINK,
+        METASHOWPARENT,
+        METAROLES,
+        METAAUTHS,
+        METAKEEPALIVE,
+        METAFRAMESRC,
+        METAFRAMELOADING,
+        TRANSITIONNAME,
+        TRANSITIONENTER,
+        TRANSITIONLEAVE,
+        HIDDENTAG,
+        DYNAMICLEVEL,
+        ACTIVEPATH,
+        PID
+        )
+	    SELECT SEQ__MENU.NEXTVAL, T.*
+        FROM 
+        (
+	    <foreach collection ="list" item="item" index="index" separator="UNION ALL">
+	    SELECT
+		#{item.path} AS PATH,
+		#{item.name} AS NAME,
+		#{item.redirect} AS REDIRECT,
+		#{item.component} AS COMPONENT,
+		#{item.metatitle} AS METATITLE,
+		#{item.metaicon} AS METAICON,
+		#{item.metaextraicon} AS METAEXTRAICON,
+		#{item.metashowlink} AS METASHOWLINK,
+		#{item.metashowparent} AS METASHOWPARENT,
+		#{item.metaroles} AS METAROLES,
+		#{item.metaauths} AS METAAUTHS,
+		#{item.metakeepalive} AS METAKEEPALIVE,
+		#{item.metaframesrc} AS METAFRAMESRC,
+		#{item.metaframeloading} AS METAFRAMELOADING,
+		#{item.transitionname} AS TRANSITIONNAME,
+		#{item.transitionenter} AS TRANSITIONENTER,
+		#{item.transitionleave} AS TRANSITIONLEAVE,
+		#{item.hiddentag} AS HIDDENTAG,
+		#{item.dynamiclevel} AS DYNAMICLEVEL,
+		#{item.activepath} AS ACTIVEPATH,
+		#{item.pid} AS PID
+	    FROM DUAL
+	    </foreach>
+        ) T
+    </insert>
+	
+	<delete id="remove">
+		DELETE FROM APP_MENU 
+		 WHERE 
+		ID IN
+		<foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+	</delete>
+	
+	<update id="modify" parameterType="com.domain.menu.model.param.AppMenuModifyParam">
+		UPDATE APP_MENU T
+		<set>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(path)"> T.PATH = #{path},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(name)"> T.NAME = #{name},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(redirect)"> T.REDIRECT = #{redirect},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(component)"> T.COMPONENT = #{component},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(metatitle)"> T.METATITLE = #{metatitle},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(metaicon)"> T.METAICON = #{metaicon},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(metaextraicon)"> T.METAEXTRAICON = #{metaextraicon},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(metashowlink)"> T.METASHOWLINK = #{metashowlink},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(metashowparent)"> T.METASHOWPARENT = #{metashowparent},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(metaroles)"> T.METAROLES = #{metaroles},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(metaauths)"> T.METAAUTHS = #{metaauths},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(metakeepalive)"> T.METAKEEPALIVE = #{metakeepalive},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(metaframesrc)"> T.METAFRAMESRC = #{metaframesrc},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(metaframeloading)"> T.METAFRAMELOADING = #{metaframeloading},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(transitionname)"> T.TRANSITIONNAME = #{transitionname},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(transitionenter)"> T.TRANSITIONENTER = #{transitionenter},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(transitionleave)"> T.TRANSITIONLEAVE = #{transitionleave},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(hiddentag)"> T.HIDDENTAG = #{hiddentag},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(dynamiclevel)"> T.DYNAMICLEVEL = #{dynamiclevel},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(activepath)"> T.ACTIVEPATH = #{activepath},</if>
+        <if test="@chok2.devwork.dao.Ognl@isNotNull(pid)"> T.PID = #{pid}</if>
+        </set>
+         WHERE T.ID = #{id}  
+	</update>
+  	
+  	<update id="modifyBatch">
+  		<foreach collection="list" index="index" item="item" open="begin" close=";end;" separator=";">
+	        UPDATE APP_MENU T
+	        <set>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.path)"> T.PATH = #{item.path},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.name)"> T.NAME = #{item.name},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.redirect)"> T.REDIRECT = #{item.redirect},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.component)"> T.COMPONENT = #{item.component},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.metatitle)"> T.METATITLE = #{item.metatitle},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.metaicon)"> T.METAICON = #{item.metaicon},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.metaextraicon)"> T.METAEXTRAICON = #{item.metaextraicon},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.metashowlink)"> T.METASHOWLINK = #{item.metashowlink},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.metashowparent)"> T.METASHOWPARENT = #{item.metashowparent},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.metaroles)"> T.METAROLES = #{item.metaroles},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.metaauths)"> T.METAAUTHS = #{item.metaauths},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.metakeepalive)"> T.METAKEEPALIVE = #{item.metakeepalive},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.metaframesrc)"> T.METAFRAMESRC = #{item.metaframesrc},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.metaframeloading)"> T.METAFRAMELOADING = #{item.metaframeloading},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.transitionname)"> T.TRANSITIONNAME = #{item.transitionname},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.transitionenter)"> T.TRANSITIONENTER = #{item.transitionenter},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.transitionleave)"> T.TRANSITIONLEAVE = #{item.transitionleave},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.hiddentag)"> T.HIDDENTAG = #{item.hiddentag},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.dynamiclevel)"> T.DYNAMICLEVEL = #{item.dynamiclevel},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.activepath)"> T.ACTIVEPATH = #{item.activepath},</if>
+		       <if test="@chok2.devwork.dao.Ognl@isNotEmpty(item.pid)"> T.PID = #{item.pid},</if>
+	        </set>
+			WHERE T.ID = #{item.id}  
+    	</foreach>
+  	</update>
+
+	<!-- 
+	****************************************************************************************************
+	* READ
+	****************************************************************************************************
+	-->
+  	
+	<sql id="dynamicColumns">
+		<choose>
+			<when test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicColumns) and @chok2.devwork.dao.Ognl@isNotNull(dynamicColumns)">
+			    <foreach collection ="dynamicColumns" item="col" index="index" separator=",">
+					<if test="col == 'id'">T.ID</if>
+					<if test="col == 'path'">T.PATH</if>
+					<if test="col == 'name'">T.NAME</if>
+					<if test="col == 'redirect'">T.REDIRECT</if>
+					<if test="col == 'component'">T.COMPONENT</if>
+					<if test="col == 'metatitle'">T.METATITLE</if>
+					<if test="col == 'metaicon'">T.METAICON</if>
+					<if test="col == 'metaextraicon'">T.METAEXTRAICON</if>
+					<if test="col == 'metashowlink'">T.METASHOWLINK</if>
+					<if test="col == 'metashowparent'">T.METASHOWPARENT</if>
+					<if test="col == 'metaroles'">T.METAROLES</if>
+					<if test="col == 'metaauths'">T.METAAUTHS</if>
+					<if test="col == 'metakeepalive'">T.METAKEEPALIVE</if>
+					<if test="col == 'metaframesrc'">T.METAFRAMESRC</if>
+					<if test="col == 'metaframeloading'">T.METAFRAMELOADING</if>
+					<if test="col == 'transitionname'">T.TRANSITIONNAME</if>
+					<if test="col == 'transitionenter'">T.TRANSITIONENTER</if>
+					<if test="col == 'transitionleave'">T.TRANSITIONLEAVE</if>
+					<if test="col == 'hiddentag'">T.HIDDENTAG</if>
+					<if test="col == 'dynamiclevel'">T.DYNAMICLEVEL</if>
+					<if test="col == 'activepath'">T.ACTIVEPATH</if>
+					<if test="col == 'pid'">T.PID</if>
+			    </foreach>
+			</when>
+			<otherwise>
+				T.ID, 
+				T.PATH, 
+				T.NAME, 
+				T.REDIRECT, 
+				T.COMPONENT, 
+				T.METATITLE, 
+				T.METAICON, 
+				T.METAEXTRAICON, 
+				T.METASHOWLINK, 
+				T.METASHOWPARENT, 
+				T.METAROLES, 
+				T.METAAUTHS, 
+				T.METAKEEPALIVE, 
+				T.METAFRAMESRC, 
+				T.METAFRAMELOADING, 
+				T.TRANSITIONNAME, 
+				T.TRANSITIONENTER, 
+				T.TRANSITIONLEAVE, 
+				T.HIDDENTAG, 
+				T.DYNAMICLEVEL, 
+				T.ACTIVEPATH, 
+				T.PID 
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<sql id="dynamicOrder">
+		<choose>
+			<when test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicOrder)">
+				ORDER BY <foreach collection="dynamicOrder" index="index" item="item" separator=",">TT.<include refid="orderParse" /> ${item.sortOrder}</foreach>  
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</sql>
+	<sql id="orderParse">
+		<if test="item.sortName == 'id'">ID</if>
+		<if test="item.sortName == 'path'">PATH</if>
+		<if test="item.sortName == 'name'">NAME</if>
+		<if test="item.sortName == 'redirect'">REDIRECT</if>
+		<if test="item.sortName == 'component'">COMPONENT</if>
+		<if test="item.sortName == 'metatitle'">METATITLE</if>
+		<if test="item.sortName == 'metaicon'">METAICON</if>
+		<if test="item.sortName == 'metaextraicon'">METAEXTRAICON</if>
+		<if test="item.sortName == 'metashowlink'">METASHOWLINK</if>
+		<if test="item.sortName == 'metashowparent'">METASHOWPARENT</if>
+		<if test="item.sortName == 'metaroles'">METAROLES</if>
+		<if test="item.sortName == 'metaauths'">METAAUTHS</if>
+		<if test="item.sortName == 'metakeepalive'">METAKEEPALIVE</if>
+		<if test="item.sortName == 'metaframesrc'">METAFRAMESRC</if>
+		<if test="item.sortName == 'metaframeloading'">METAFRAMELOADING</if>
+		<if test="item.sortName == 'transitionname'">TRANSITIONNAME</if>
+		<if test="item.sortName == 'transitionenter'">TRANSITIONENTER</if>
+		<if test="item.sortName == 'transitionleave'">TRANSITIONLEAVE</if>
+		<if test="item.sortName == 'hiddentag'">HIDDENTAG</if>
+		<if test="item.sortName == 'dynamiclevel'">DYNAMICLEVEL</if>
+		<if test="item.sortName == 'activepath'">ACTIVEPATH</if>
+		<if test="item.sortName == 'pid'">PID</if>
+	</sql>
+	
+	<sql id="dynamicWhereEqual">
+		<where>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.id)"> AND T.ID = #{dynamicWhere.id}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.path)"> AND T.PATH = #{dynamicWhere.path}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.name)"> AND T.NAME = #{dynamicWhere.name}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.redirect)"> AND T.REDIRECT = #{dynamicWhere.redirect}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.component)"> AND T.COMPONENT = #{dynamicWhere.component}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metatitle)"> AND T.METATITLE = #{dynamicWhere.metatitle}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metaicon)"> AND T.METAICON = #{dynamicWhere.metaicon}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metaextraicon)"> AND T.METAEXTRAICON = #{dynamicWhere.metaextraicon}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metashowlink)"> AND T.METASHOWLINK = #{dynamicWhere.metashowlink}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metashowparent)"> AND T.METASHOWPARENT = #{dynamicWhere.metashowparent}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metaroles)"> AND T.METAROLES = #{dynamicWhere.metaroles}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metaauths)"> AND T.METAAUTHS = #{dynamicWhere.metaauths}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metakeepalive)"> AND T.METAKEEPALIVE = #{dynamicWhere.metakeepalive}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metaframesrc)"> AND T.METAFRAMESRC = #{dynamicWhere.metaframesrc}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metaframeloading)"> AND T.METAFRAMELOADING = #{dynamicWhere.metaframeloading}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.transitionname)"> AND T.TRANSITIONNAME = #{dynamicWhere.transitionname}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.transitionenter)"> AND T.TRANSITIONENTER = #{dynamicWhere.transitionenter}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.transitionleave)"> AND T.TRANSITIONLEAVE = #{dynamicWhere.transitionleave}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.hiddentag)"> AND T.HIDDENTAG = #{dynamicWhere.hiddentag}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.dynamiclevel)"> AND T.DYNAMICLEVEL = #{dynamicWhere.dynamiclevel}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.activepath)"> AND T.ACTIVEPATH = #{dynamicWhere.activepath}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.pid)"> AND T.PID = #{dynamicWhere.pid}</if>
+		</where>
+	</sql>	
+	
+	<sql id="dynamicWhere">
+		<where>
+			<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.idArray)"> 
+				AND T.ID IN
+				<foreach collection="dynamicWhere.idArray" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+			</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.path)"> AND T.PATH LIKE '%'||#{dynamicWhere.path}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.name)"> AND T.NAME LIKE '%'||#{dynamicWhere.name}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.redirect)"> AND T.REDIRECT LIKE '%'||#{dynamicWhere.redirect}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.component)"> AND T.COMPONENT LIKE '%'||#{dynamicWhere.component}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metatitle)"> AND T.METATITLE LIKE '%'||#{dynamicWhere.metatitle}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metaicon)"> AND T.METAICON LIKE '%'||#{dynamicWhere.metaicon}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metaextraicon)"> AND T.METAEXTRAICON LIKE '%'||#{dynamicWhere.metaextraicon}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metashowlink)"> AND T.METASHOWLINK LIKE '%'||#{dynamicWhere.metashowlink}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metashowparent)"> AND T.METASHOWPARENT LIKE '%'||#{dynamicWhere.metashowparent}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metaroles)"> AND T.METAROLES LIKE '%'||#{dynamicWhere.metaroles}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metaauths)"> AND T.METAAUTHS LIKE '%'||#{dynamicWhere.metaauths}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metakeepalive)"> AND T.METAKEEPALIVE LIKE '%'||#{dynamicWhere.metakeepalive}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metaframesrc)"> AND T.METAFRAMESRC LIKE '%'||#{dynamicWhere.metaframesrc}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.metaframeloading)"> AND T.METAFRAMELOADING LIKE '%'||#{dynamicWhere.metaframeloading}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.transitionname)"> AND T.TRANSITIONNAME LIKE '%'||#{dynamicWhere.transitionname}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.transitionenter)"> AND T.TRANSITIONENTER LIKE '%'||#{dynamicWhere.transitionenter}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.transitionleave)"> AND T.TRANSITIONLEAVE LIKE '%'||#{dynamicWhere.transitionleave}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.hiddentag)"> AND T.HIDDENTAG LIKE '%'||#{dynamicWhere.hiddentag}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.dynamiclevel)"> AND T.DYNAMICLEVEL LIKE '%'||#{dynamicWhere.dynamiclevel}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.activepath)"> AND T.ACTIVEPATH LIKE '%'||#{dynamicWhere.activepath}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.pid)"> AND T.PID LIKE '%'||#{dynamicWhere.pid}||'%'</if>
+		</where>
+	</sql>	
+	
+	<resultMap type="com.domain.menu.model.result.AppMenuResult" id="appMenuResult">
+        <result property="id" column="ID"/>
+        <result property="path" column="PATH"/>
+        <result property="name" column="NAME" typeHandler="chok2.devwork.dao.mybatis.NullToEmptyStringTypeHandler" />
+        <result property="redirect" column="REDIRECT" typeHandler="chok2.devwork.dao.mybatis.NullToEmptyStringTypeHandler" />
+        <result property="component" column="COMPONENT" typeHandler="chok2.devwork.dao.mybatis.NullToEmptyStringTypeHandler" />
+        <result property="metatitle" column="METATITLE" typeHandler="chok2.devwork.dao.mybatis.NullToEmptyStringTypeHandler" />
+        <result property="metaicon" column="METAICON" typeHandler="chok2.devwork.dao.mybatis.NullToEmptyStringTypeHandler" />
+        <result property="metaextraicon" column="METAEXTRAICON"/>
+        <result property="metashowlink" column="METASHOWLINK"/>
+        <result property="metashowparent" column="METASHOWPARENT"/>
+        <result property="metaroles" column="METAROLES" typeHandler="chok2.devwork.dao.mybatis.NullToEmptyStringTypeHandler" />
+        <result property="metaauths" column="METAAUTHS" typeHandler="chok2.devwork.dao.mybatis.NullToEmptyStringTypeHandler" />
+        <result property="metakeepalive" column="METAKEEPALIVE"/>
+        <result property="metaframesrc" column="METAFRAMESRC"/>
+        <result property="metaframeloading" column="METAFRAMELOADING"/>
+        <result property="transitionname" column="TRANSITIONNAME"/>
+        <result property="transitionenter" column="TRANSITIONENTER"/>
+        <result property="transitionleave" column="TRANSITIONLEAVE"/>
+        <result property="hiddentag" column="HIDDENTAG"/>
+        <result property="dynamiclevel" column="DYNAMICLEVEL"/>
+        <result property="activepath" column="ACTIVEPATH"/>
+        <result property="pid" column="PID" typeHandler="chok2.devwork.dao.mybatis.NullToEmptyLongTypeHandler" />
+	</resultMap>
+	
+	<!-- queryOne -->
+	<select id="queryOne" resultMap="appMenuResult">
+		SELECT <include refid="dynamicColumns"/> 
+		  FROM APP_MENU T 
+		  <include refid="dynamicWhereEqual" />
+	</select>
+	
+	<!-- queryList -->
+	<select id="queryList" parameterType="com.domain.menu.model.param.AppMenuQueryListParam" resultType="list" resultMap="appMenuResult">
+		<choose>
+			<!-- 翻页 -->
+			<when test="@chok2.devwork.dao.Ognl@isNotEmpty(page) and @chok2.devwork.dao.Ognl@isNotEmpty(pagesize)">
+				SELECT * FROM (SELECT row_.*, ROWNUM rownum_ FROM(
+					SELECT TT.* FROM 
+					(
+						SELECT <include refid="dynamicColumns"/> FROM APP_MENU T
+						<include refid="dynamicWhere" />
+					) TT
+					<include refid="dynamicOrder" />
+	            ) row_ WHERE rownum &lt;= #{page}*#{pagesize} ) 
+	            WHERE rownum_ &gt; (#{page}-1)*#{pagesize}
+			</when>
+			<!-- 非翻页 -->
+			<otherwise>
+				SELECT TT.* FROM 
+				(
+					SELECT <include refid="dynamicColumns"/> FROM APP_MENU T
+					<include refid="dynamicWhere" />
+				) TT
+				<include refid="dynamicOrder" />
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="queryCount" resultType="int">
+		SELECT COUNT(1) FROM APP_MENU T
+		<include refid="dynamicWhere" />
+	</select>
+</mapper>  

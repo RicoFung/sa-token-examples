@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">   
+
+<mapper namespace="com.domain.auth.dao.ManageUserinfoDao">
+
+	<!-- 
+	****************************************************************************************************
+	* READ
+	****************************************************************************************************
+	-->
+  	
+	<sql id="dynamicColumns">
+		<choose>
+			<when test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicColumns) and @chok2.devwork.dao.Ognl@isNotNull(dynamicColumns)">
+			    <foreach collection ="dynamicColumns" item="col" index="index" separator=",">
+					<if test="col == 'displayname'">T.DISPLAYNAME</if>
+					<if test="col == 'channelid'">T.CHANNELID</if>
+					<if test="col == 'disableby'">T.DISABLEBY</if>
+					<if test="col == 'modifyby'">T.MODIFYBY</if>
+					<if test="col == 'disablereason'">T.DISABLEREASON</if>
+					<if test="col == 'modifytime'">T.MODIFYTIME</if>
+					<if test="col == 'shopid'">T.SHOPID</if>
+					<if test="col == 'name'">T.NAME</if>
+					<if test="col == 'userrole'">T.USERROLE</if>
+					<if test="col == 'code'">T.CODE</if>
+					<if test="col == 'disabledate'">T.DISABLEDATE</if>
+					<if test="col == 'status'">T.STATUS</if>
+					<if test="col == 'userlanguage'">T.USERLANGUAGE</if>
+					<if test="col == 'createchannelid'">T.CREATECHANNELID</if>
+					<if test="col == 'createby'">T.CREATEBY</if>
+					<if test="col == 'password'">T.PASSWORD</if>
+					<if test="col == 'enabledate'">T.ENABLEDATE</if>
+					<if test="col == 'id'">T.ID</if>
+					<if test="col == 'createtime'">T.CREATETIME</if>
+					<if test="col == 'enableby'">T.ENABLEBY</if>
+					<if test="col == 'remark'">T.REMARK</if>
+					<if test="col == 'type'">T.TYPE</if>
+					<if test="col == 'shopcode'">T.SHOPCODE</if>
+					<if test="col == 'staffcode'">T.STAFFCODE</if>
+					<if test="col == 'supplierid'">T.SUPPLIERID</if>
+					<if test="col == 'suppliercode'">T.SUPPLIERCODE</if>
+					<if test="col == 'suppliername'">T.SUPPLIERNAME</if>
+					<if test="col == 'usertype'">T.USERTYPE</if>
+					<if test="col == 'loginfailurecount'">T.LOGINFAILURECOUNT</if>
+					<if test="col == 'passwordexpiredate'">T.PASSWORDEXPIREDATE</if>
+			    </foreach>
+			</when>
+			<otherwise>
+				T.DISPLAYNAME, 
+				T.CHANNELID, 
+				T.DISABLEBY, 
+				T.MODIFYBY, 
+				T.DISABLEREASON, 
+				T.MODIFYTIME, 
+				T.SHOPID, 
+				T.NAME, 
+				T.USERROLE, 
+				T.CODE, 
+				T.DISABLEDATE, 
+				T.STATUS, 
+				T.USERLANGUAGE, 
+				T.CREATECHANNELID, 
+				T.CREATEBY, 
+				T.PASSWORD, 
+				T.ENABLEDATE, 
+				T.ID, 
+				T.CREATETIME, 
+				T.ENABLEBY, 
+				T.REMARK, 
+				T.TYPE, 
+				T.SHOPCODE, 
+				T.STAFFCODE, 
+				T.SUPPLIERID, 
+				T.SUPPLIERCODE, 
+				T.SUPPLIERNAME, 
+				T.USERTYPE, 
+				T.LOGINFAILURECOUNT, 
+				T.PASSWORDEXPIREDATE 
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<sql id="dynamicOrder">
+		<choose>
+			<when test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicOrder)">
+				ORDER BY <foreach collection="dynamicOrder" index="index" item="item" separator=",">TT.<include refid="orderParse" /> ${item.sortOrder}</foreach>  
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</sql>
+	<sql id="orderParse">
+		<if test="item.sortName == 'displayname'">DISPLAYNAME</if>
+		<if test="item.sortName == 'channelid'">CHANNELID</if>
+		<if test="item.sortName == 'disableby'">DISABLEBY</if>
+		<if test="item.sortName == 'modifyby'">MODIFYBY</if>
+		<if test="item.sortName == 'disablereason'">DISABLEREASON</if>
+		<if test="item.sortName == 'modifytime'">MODIFYTIME</if>
+		<if test="item.sortName == 'shopid'">SHOPID</if>
+		<if test="item.sortName == 'name'">NAME</if>
+		<if test="item.sortName == 'userrole'">USERROLE</if>
+		<if test="item.sortName == 'code'">CODE</if>
+		<if test="item.sortName == 'disabledate'">DISABLEDATE</if>
+		<if test="item.sortName == 'status'">STATUS</if>
+		<if test="item.sortName == 'userlanguage'">USERLANGUAGE</if>
+		<if test="item.sortName == 'createchannelid'">CREATECHANNELID</if>
+		<if test="item.sortName == 'createby'">CREATEBY</if>
+		<if test="item.sortName == 'password'">PASSWORD</if>
+		<if test="item.sortName == 'enabledate'">ENABLEDATE</if>
+		<if test="item.sortName == 'id'">ID</if>
+		<if test="item.sortName == 'createtime'">CREATETIME</if>
+		<if test="item.sortName == 'enableby'">ENABLEBY</if>
+		<if test="item.sortName == 'remark'">REMARK</if>
+		<if test="item.sortName == 'type'">TYPE</if>
+		<if test="item.sortName == 'shopcode'">SHOPCODE</if>
+		<if test="item.sortName == 'staffcode'">STAFFCODE</if>
+		<if test="item.sortName == 'supplierid'">SUPPLIERID</if>
+		<if test="item.sortName == 'suppliercode'">SUPPLIERCODE</if>
+		<if test="item.sortName == 'suppliername'">SUPPLIERNAME</if>
+		<if test="item.sortName == 'usertype'">USERTYPE</if>
+		<if test="item.sortName == 'loginfailurecount'">LOGINFAILURECOUNT</if>
+		<if test="item.sortName == 'passwordexpiredate'">PASSWORDEXPIREDATE</if>
+	</sql>
+	
+	<sql id="dynamicWhereEqual">
+		<where>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.displayname)"> AND T.DISPLAYNAME = #{dynamicWhere.displayname}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.channelid)"> AND T.CHANNELID = #{dynamicWhere.channelid}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.disableby)"> AND T.DISABLEBY = #{dynamicWhere.disableby}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.modifyby)"> AND T.MODIFYBY = #{dynamicWhere.modifyby}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.disablereason)"> AND T.DISABLEREASON = #{dynamicWhere.disablereason}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.modifytime)"> AND T.MODIFYTIME = #{dynamicWhere.modifytime}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.shopid)"> AND T.SHOPID = #{dynamicWhere.shopid}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.name)"> AND T.NAME = #{dynamicWhere.name}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.userrole)"> AND T.USERROLE = #{dynamicWhere.userrole}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.code)"> AND T.CODE = #{dynamicWhere.code}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.disabledate)"> AND T.DISABLEDATE = #{dynamicWhere.disabledate}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.status)"> AND T.STATUS = #{dynamicWhere.status}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.userlanguage)"> AND T.USERLANGUAGE = #{dynamicWhere.userlanguage}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.createchannelid)"> AND T.CREATECHANNELID = #{dynamicWhere.createchannelid}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.createby)"> AND T.CREATEBY = #{dynamicWhere.createby}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.password)"> AND T.PASSWORD = #{dynamicWhere.password}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.enabledate)"> AND T.ENABLEDATE = #{dynamicWhere.enabledate}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.id)"> AND T.ID = #{dynamicWhere.id}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.createtime)"> AND T.CREATETIME = #{dynamicWhere.createtime}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.enableby)"> AND T.ENABLEBY = #{dynamicWhere.enableby}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.remark)"> AND T.REMARK = #{dynamicWhere.remark}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.type)"> AND T.TYPE = #{dynamicWhere.type}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.shopcode)"> AND T.SHOPCODE = #{dynamicWhere.shopcode}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.staffcode)"> AND T.STAFFCODE = #{dynamicWhere.staffcode}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.supplierid)"> AND T.SUPPLIERID = #{dynamicWhere.supplierid}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.suppliercode)"> AND T.SUPPLIERCODE = #{dynamicWhere.suppliercode}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.suppliername)"> AND T.SUPPLIERNAME = #{dynamicWhere.suppliername}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.usertype)"> AND T.USERTYPE = #{dynamicWhere.usertype}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.loginfailurecount)"> AND T.LOGINFAILURECOUNT = #{dynamicWhere.loginfailurecount}</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.passwordexpiredate)"> AND T.PASSWORDEXPIREDATE = #{dynamicWhere.passwordexpiredate}</if>
+		</where>
+	</sql>	
+	
+	<sql id="dynamicWhere">
+		<where>
+			<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.idArray)"> 
+				AND T.ID IN
+				<foreach collection="dynamicWhere.idArray" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+			</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.displayname)"> AND T.DISPLAYNAME LIKE '%'||#{dynamicWhere.displayname}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.channelid)"> AND T.CHANNELID LIKE '%'||#{dynamicWhere.channelid}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.disableby)"> AND T.DISABLEBY LIKE '%'||#{dynamicWhere.disableby}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.modifyby)"> AND T.MODIFYBY LIKE '%'||#{dynamicWhere.modifyby}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.disablereason)"> AND T.DISABLEREASON LIKE '%'||#{dynamicWhere.disablereason}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.modifytime)"> AND T.MODIFYTIME LIKE '%'||#{dynamicWhere.modifytime}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.shopid)"> AND T.SHOPID LIKE '%'||#{dynamicWhere.shopid}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.name)"> AND T.NAME LIKE '%'||#{dynamicWhere.name}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.userrole)"> AND T.USERROLE LIKE '%'||#{dynamicWhere.userrole}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.code)"> AND T.CODE LIKE '%'||#{dynamicWhere.code}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.disabledate)"> AND T.DISABLEDATE LIKE '%'||#{dynamicWhere.disabledate}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.status)"> AND T.STATUS LIKE '%'||#{dynamicWhere.status}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.userlanguage)"> AND T.USERLANGUAGE LIKE '%'||#{dynamicWhere.userlanguage}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.createchannelid)"> AND T.CREATECHANNELID LIKE '%'||#{dynamicWhere.createchannelid}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.createby)"> AND T.CREATEBY LIKE '%'||#{dynamicWhere.createby}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.password)"> AND T.PASSWORD LIKE '%'||#{dynamicWhere.password}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.enabledate)"> AND T.ENABLEDATE LIKE '%'||#{dynamicWhere.enabledate}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.createtime)"> AND T.CREATETIME LIKE '%'||#{dynamicWhere.createtime}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.enableby)"> AND T.ENABLEBY LIKE '%'||#{dynamicWhere.enableby}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.remark)"> AND T.REMARK LIKE '%'||#{dynamicWhere.remark}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.type)"> AND T.TYPE LIKE '%'||#{dynamicWhere.type}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.shopcode)"> AND T.SHOPCODE LIKE '%'||#{dynamicWhere.shopcode}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.staffcode)"> AND T.STAFFCODE LIKE '%'||#{dynamicWhere.staffcode}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.supplierid)"> AND T.SUPPLIERID LIKE '%'||#{dynamicWhere.supplierid}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.suppliercode)"> AND T.SUPPLIERCODE LIKE '%'||#{dynamicWhere.suppliercode}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.suppliername)"> AND T.SUPPLIERNAME LIKE '%'||#{dynamicWhere.suppliername}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.usertype)"> AND T.USERTYPE LIKE '%'||#{dynamicWhere.usertype}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.loginfailurecount)"> AND T.LOGINFAILURECOUNT LIKE '%'||#{dynamicWhere.loginfailurecount}||'%'</if>
+	       	<if test="@chok2.devwork.dao.Ognl@isNotEmpty(dynamicWhere.passwordexpiredate)"> AND T.PASSWORDEXPIREDATE LIKE '%'||#{dynamicWhere.passwordexpiredate}||'%'</if>
+		</where>
+	</sql>	
+	
+	<resultMap type="com.domain.auth.model.result.ManageUserinfoResult" id="manageUserinfoResult">
+        <result property="displayname" column="DISPLAYNAME"/>
+        <result property="channelid" column="CHANNELID"/>
+        <result property="disableby" column="DISABLEBY"/>
+        <result property="modifyby" column="MODIFYBY"/>
+        <result property="disablereason" column="DISABLEREASON"/>
+        <result property="modifytime" column="MODIFYTIME"/>
+        <result property="shopid" column="SHOPID"/>
+        <result property="name" column="NAME"/>
+        <result property="userrole" column="USERROLE"/>
+        <result property="code" column="CODE"/>
+        <result property="disabledate" column="DISABLEDATE"/>
+        <result property="status" column="STATUS"/>
+        <result property="userlanguage" column="USERLANGUAGE"/>
+        <result property="createchannelid" column="CREATECHANNELID"/>
+        <result property="createby" column="CREATEBY"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="enabledate" column="ENABLEDATE"/>
+        <result property="id" column="ID"/>
+        <result property="createtime" column="CREATETIME"/>
+        <result property="enableby" column="ENABLEBY"/>
+        <result property="remark" column="REMARK"/>
+        <result property="type" column="TYPE"/>
+        <result property="shopcode" column="SHOPCODE"/>
+        <result property="staffcode" column="STAFFCODE"/>
+        <result property="supplierid" column="SUPPLIERID"/>
+        <result property="suppliercode" column="SUPPLIERCODE"/>
+        <result property="suppliername" column="SUPPLIERNAME"/>
+        <result property="usertype" column="USERTYPE"/>
+        <result property="loginfailurecount" column="LOGINFAILURECOUNT"/>
+        <result property="passwordexpiredate" column="PASSWORDEXPIREDATE"/>
+	</resultMap>
+	
+	<!-- queryOne -->
+	<select id="queryOne" resultMap="manageUserinfoResult">
+		SELECT <include refid="dynamicColumns"/> 
+		  FROM MANAGE_USERINFO T 
+		  <include refid="dynamicWhereEqual" />
+	</select>
+	
+	<!-- queryList -->
+	<select id="queryList" parameterType="com.domain.auth.model.param.ManageUserinfoQueryListParam" resultType="list" resultMap="manageUserinfoResult">
+		<choose>
+			<!-- 翻页 -->
+			<when test="@chok2.devwork.dao.Ognl@isNotEmpty(page) and @chok2.devwork.dao.Ognl@isNotEmpty(pagesize)">
+				SELECT * FROM (SELECT row_.*, ROWNUM rownum_ FROM(
+					SELECT TT.* FROM 
+					(
+						SELECT <include refid="dynamicColumns"/> FROM MANAGE_USERINFO T
+						<include refid="dynamicWhere" />
+					) TT
+					<include refid="dynamicOrder" />
+	            ) row_ WHERE rownum &lt;= #{page}*#{pagesize} ) 
+	            WHERE rownum_ &gt; (#{page}-1)*#{pagesize}
+			</when>
+			<!-- 非翻页 -->
+			<otherwise>
+				SELECT TT.* FROM 
+				(
+					SELECT <include refid="dynamicColumns"/> FROM MANAGE_USERINFO T
+					<include refid="dynamicWhere" />
+				) TT
+				<include refid="dynamicOrder" />
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="queryCount" resultType="int">
+		SELECT COUNT(1) FROM MANAGE_USERINFO T
+		<include refid="dynamicWhere" />
+	</select>
+
+	<resultMap id="roleResult" type="java.lang.String">
+		<result property="code" column="CODE" />
+	</resultMap>
+	<select id="queryRoleList" resultMap="roleResult">
+		SELECT R.CODE
+		  FROM MANAGE_USERINFO U
+		  JOIN APP_USER_ROLE UR
+		    ON UR.USERID = U.ID
+		  JOIN APP_ROLE R
+			ON R.ID = UR.ROLEID
+		 WHERE U.ID = #{userid}
+	</select>
+</mapper>  

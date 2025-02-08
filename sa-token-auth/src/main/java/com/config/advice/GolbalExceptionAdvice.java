@@ -1,10 +1,7 @@
 package com.config.advice;
 
-import java.util.HashMap;
-import java.util.Map;
-
-
 import chok2.devwork.pojo.ChokResponse;
+import chok2.devwork.pojo.ChokResponseConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-
-import chok2.devwork.pojo.ChokResponseConstants;
+import java.util.HashMap;
+import java.util.Map;
 
 /*******************************************
  * 
@@ -23,8 +20,8 @@ import chok2.devwork.pojo.ChokResponseConstants;
  * @author rico.fung
  *
  */
-@RestControllerAdvice(basePackages = {"com.api.v3.customtbdemo.controller"})
-public class CusControllerExceptionAdvice
+@RestControllerAdvice//(basePackages = {"com.api.v3.customtbdemo.controller"})
+public class GolbalExceptionAdvice
 {
 	private final Logger log = LoggerFactory.getLogger(getClass());
 	

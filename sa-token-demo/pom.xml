@@ -116,7 +116,34 @@
 	        <artifactId>mapstruct-processor</artifactId>
 		        <version>${org.mapstruct.version}</version>
 	    </dependency>
+		<!-- spring-boot HikariCP -->
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+		</dependency>
+		<!-- db driver -->
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<version>12.2.0.1.0</version>
+			<type>jar</type>
+		</dependency>
+		<!-- hutool -->
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-all</artifactId>
+		</dependency>
 		<!-- chok -->
+		<dependency>
+			<groupId>com.chok2</groupId>
+			<artifactId>chok2-devwork-controller-heavy</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-security</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<dependency>
 			<groupId>com.chok2</groupId>
 			<artifactId>chok2-devwork-pojo</artifactId>
@@ -128,10 +155,6 @@
 		<dependency>
 			<groupId>com.chok2</groupId>
 			<artifactId>chok2-component</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.chok2</groupId>
-			<artifactId>chok2-util-core</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -168,22 +191,31 @@
 				<!-- 是否替换@xx@表示的maven properties属性值 -->
 				<filtering>true</filtering>
 				<includes>
-					<include>**/*.xml</include>
 					<include>**/application.properties</include>
 					<include>**/application-${profileActive}.properties</include>
+					<include>**/datasource-mybatis-${profileActive}.properties</include>
+					<include>**/redisson-single-${profileActive}.yml</include>
 					<include>**/logback-spring.xml</include>
 					<include>**/logback-spring-${profileActive}.xml</include>
+					<include>**/mybatis.xml</include>
+					<include>**/i18n/*</include>
+					<include>**/img/*</include>
+					<include>**/templates/**</include>
 				</includes>
 			</resource>
 		</resources>
 		<plugins>
 			<plugin>
-		        <groupId>org.apache.maven.plugins</groupId>
-		        <artifactId>maven-war-plugin</artifactId>
-		        <version>3.3.2</version>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.4.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<finalName>sa-token-demo</finalName>
