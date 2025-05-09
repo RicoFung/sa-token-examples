@@ -1,47 +1,43 @@
 package com.config;
 
-import chok2.devwork.pojo.ChokResponse;
-import chok2.devwork.pojo.ChokResponseConstants;
-import cn.dev33.satoken.reactor.context.SaReactorSyncHolder;
 import cn.dev33.satoken.reactor.filter.SaReactorFilter;
 import cn.dev33.satoken.stp.StpUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import cn.dev33.satoken.util.SaResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.server.ServerWebExchange;
 
 
 @Configuration(proxyBeanMethods = false)
-public class SaTokenConfig {
-
-    private final static ObjectMapper objectMapper = new ObjectMapper();
+public class SaTokenConfig
+{
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Bean
-    public SaReactorFilter saReactorFilter() {
+    public SaReactorFilter saReactorFilter()
+    {
         return new SaReactorFilter()
                 // 拦截所有请求
                 .addInclude("/**")
                 // 不拦截的路径（如登录接口）
-                .addExclude("/auth/**")
-                .setAuth(obj -> {
+                .addExclude(
+                        "/auth/**",                 // 登录/注销接口
+                        "/swagger-ui.html",         // Swagger UI 页面
+                        "/swagger-ui/**",           // UI 静态资源
+                        "/v3/api-docs/**",          // OpenAPI JSON/YAML
+                        "/webjars/**"               // webjars 资源（如果有的话）
+                )
+                .setAuth(obj ->
+                {
                     // 登录校验
                     StpUtil.checkLogin();
                 })
                 // setAuth方法异常处理
-                .setError(e -> {
-                    // 设置错误返回格式为JSON
-                    ServerWebExchange exchange = SaReactorSyncHolder.getContext();
-                    exchange.getResponse().getHeaders().set("Content-Type", "application/json; charset=utf-8");
-                    ChokResponse<Object> response = new ChokResponse<Object>();
-                    response.setSuccess(false);
-                    response.setCode(ChokResponseConstants.ERROR_CODE1);
-                    response.setMsg(e.getMessage());
-                    try {
-                        return objectMapper.writeValueAsString(response);
-                    } catch (JsonProcessingException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                .setError(e ->
+                {
+                    log.error("<== {}", e.getMessage());
+                    return SaResult.error(e.getMessage());
                 })
                 ;
     }

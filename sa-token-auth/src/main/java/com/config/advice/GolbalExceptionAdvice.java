@@ -1,7 +1,6 @@
 package com.config.advice;
 
-import chok2.devwork.pojo.ChokResponse;
-import chok2.devwork.pojo.ChokResponseConstants;
+import cn.dev33.satoken.util.SaResult;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /*******************************************
- * 
+ *
  * 只能拦截到Controller层的异常，且Controller自行try catch的话会无效
  * @author rico.fung
  *
@@ -24,22 +23,18 @@ import java.util.Map;
 public class GolbalExceptionAdvice
 {
 	private final Logger log = LoggerFactory.getLogger(getClass());
-	
+
 	@ExceptionHandler(value = Exception.class)
 	@ResponseBody
-	public ChokResponse<Object> defaultErrorHandler(HttpServletRequest req, Exception e)
+	public SaResult defaultErrorHandler(HttpServletRequest req, Exception e)
 	{
-		ChokResponse<Object> dto = new ChokResponse<Object>();
-		dto.setSuccess(false);
-		dto.setCode(ChokResponseConstants.ERROR_CODE1);
-		dto.setMsg(e.toString());
 		log.error("{}", e);
-		return dto;
+		return SaResult.error(e.toString());
 	}
-	
+
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	@ResponseBody
-	public ChokResponse<Object> validationExceptions(MethodArgumentNotValidException e)
+	public SaResult validationExceptions(MethodArgumentNotValidException e)
 	{
 		Map<String, String> errors = new HashMap<>();
 		e.getBindingResult().getAllErrors().forEach((error) ->
@@ -48,11 +43,7 @@ public class GolbalExceptionAdvice
 			String errorMessage = error.getDefaultMessage();
 			errors.put(fieldName, errorMessage);
 		});
-		ChokResponse<Object> dto = new ChokResponse<Object>();
-		dto.setSuccess(false);
-		dto.setCode(ChokResponseConstants.ERROR_CODE1);
-		dto.setMsg(errors.values().toString());
 		log.error("{}", errors.values().toString());
-		return dto;
+		return SaResult.error(errors.values().toString());
 	}
 }

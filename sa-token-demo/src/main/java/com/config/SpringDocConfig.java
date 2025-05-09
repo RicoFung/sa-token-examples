@@ -1,16 +1,13 @@
 package com.config;
 
-import org.apache.http.HttpHeaders;
-import org.springdoc.core.GroupedOpenApi;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SpringDocConfig
@@ -20,34 +17,21 @@ public class SpringDocConfig
 	{
 		return new OpenAPI()
 				.info(new Info()
-						.title("Chok Resource API")
-						.description("SpringDoc API 演示")
+						.title("EPO-POS-STORE API")
+						.description("EPO-POS-STORE API 演示")
 						.version("v1.0.0")
 						.license(new License().name("Apache 2.0").url("http://springdoc.org"))
+				)
+				.components(new Components()
+						// 定义一个名叫 "sa-token" 的 SecurityScheme
+						.addSecuritySchemes("sa-token",
+								new io.swagger.v3.oas.models.security.SecurityScheme()
+										.type(SecurityScheme.Type.APIKEY)
+										.in(SecurityScheme.In.HEADER)
+										.name("satoken")
 						)
-//				.externalDocs(new ExternalDocumentation().description("Edevp-Stpre").url("http://www.edevp.cn"))
-				.addSecurityItem(new SecurityRequirement().addList(HttpHeaders.AUTHORIZATION))
-				.components(new Components().addSecuritySchemes(HttpHeaders.AUTHORIZATION,
-						new SecurityScheme().name(HttpHeaders.AUTHORIZATION).type(SecurityScheme.Type.HTTP)
-								.scheme("bearer").bearerFormat("JWT")));
-		// .schemaRequirement(HttpHeaders.AUTHORIZATION, this.securityScheme());
-	}
-
-//	@Bean
-//	public GroupedOpenApi v1Api()
-//	{
-//		return GroupedOpenApi.builder().group("v1").pathsToMatch("/api/v1/**").build();
-//	}
-//	
-//	@Bean
-//	public GroupedOpenApi v2Api()
-//	{
-//		return GroupedOpenApi.builder().group("v2").pathsToMatch("/api/v2/**").build();
-//	}
-	
-	@Bean
-	public GroupedOpenApi v3Api()
-	{
-		return GroupedOpenApi.builder().group("v3_1").pathsToMatch("/api/v3_1/**").build();
+				)
+				// 全局生效：所有接口默认都需要这个安全方案
+				.addSecurityItem(new SecurityRequirement().addList("sa-token"));
 	}
 }

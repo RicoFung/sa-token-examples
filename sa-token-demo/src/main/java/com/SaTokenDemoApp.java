@@ -1,5 +1,7 @@
 package com;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -8,6 +10,11 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 
+@OpenAPIDefinition(
+		servers = {
+				@Server(url = "/", description = "通过 Gateway 访问")
+		}
+)
 // 默认（只能扫描project内的bean）
 //@SpringBootApplication
 // 自定义（可扫描project外的bean）

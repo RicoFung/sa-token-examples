@@ -103,8 +103,8 @@
 		<!-- springdoc -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
-		</dependency>	
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+		</dependency>
 		<!-- mapstruct eclipse必须在实例项目中引用才能生效 -->
 	    <dependency>
 	        <groupId>org.mapstruct</groupId>
